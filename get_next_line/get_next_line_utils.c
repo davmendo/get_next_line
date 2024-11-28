@@ -1,14 +1,33 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: davmendo <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/26 15:27:57 by davmendo          #+#    #+#             */
-/*   Updated: 2024/11/26 16:24:51 by davmendo         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "get_next_line.h"
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	l;
+
+	l = 0;
+	while (s[l])
+	{
+		l++;
+	}
+	return (l);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	while (*s)
+	{
+		if (*s == c)
+		{
+			return ((char *)s);
+		}
+		s++;
+	}
+	if (c == '\0')
+	{
+		return ((char *)s);
+	}
+	return (NULL);
+}
 
 char	*ft_strndup(const char *s, size_t n)
 {
@@ -34,6 +53,7 @@ char	*ft_strndup(const char *s, size_t n)
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*r;
+	char	*tmp;
 	size_t	len1;
 	size_t	len2;
 
@@ -48,25 +68,11 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	{
 		return (NULL);
 	}
-	ft_memmove(r, s1, len1);
-	ft_memmove(r + len1, s2, len2);
-	r[len1 + len2] = '\0';
+	tmp = r;
+	while (*s1)
+		*tmp++ = *s1++;
+	while (*s2)
+		*tmp++ = *s2++;
+	*tmp = '\0';
 	return (r);
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	while (*s)
-	{
-		if (*s == c)
-		{
-			return ((unsigned char *)s);
-		}
-		s++;
-	}
-	if (c == '\0')
-	{
-		return ((unsigned char *)s);
-	}
-	return (NULL);
 }
