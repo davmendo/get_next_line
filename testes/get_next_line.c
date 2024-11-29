@@ -4,7 +4,7 @@ static char	*resize_line(char *current_line, int current_length, int new_length)
 {
 	char	*resized_line;
 	int		i;
-	
+
 	resized_line = malloc(sizeof(char) * (new_length + 1));
 	if (!resized_line)
 	{
@@ -21,24 +21,24 @@ static char	*resize_line(char *current_line, int current_length, int new_length)
 	return (resized_line);
 }
 
-static char	*read_and_store(int fd, char *line, int *line_capacity, int *line_length)
+static char	*read_and_store(int fd, char *line, int *line_size, int *line_len)
 {
-	char buffer;
-	int bytes_read;
-	
+	char	buffer;
+	int		bytes_read;
+
 	bytes_read = read(fd, &buffer, 1);
 	while (bytes_read > 0)
 	{
-		if (*line_length >= *line_capacity)
+		if (*line_len >= *line_size)
 		{
-			line = resize_line(line, *line_capacity, *line_capacity + BUFFER_SIZE);
+			line = resize_line(line, *line_size, *line_size + BUFFER_SIZE);
 			if (!line)
 				return (NULL);
-			*line_capacity += BUFFER_SIZE;
+			*line_size += BUFFER_SIZE;
 		}
-		line[(*line_length)++] = buffer;
+		line[(*line_len)++] = buffer;
 		if (buffer == '\n')
-			break;
+			break ;
 		bytes_read = read(fd, &buffer, 1);
 	}
 	return (line);
@@ -47,16 +47,17 @@ static char	*read_and_store(int fd, char *line, int *line_capacity, int *line_le
 char	*get_next_line(int fd)
 {
 	char	*line;
-	int	line_length;
-	int	line_capacity;
-	
+	char	*result;
+	int		line_length;
+	int		line_capacity;
+
+	line_length = 0;
+	line_capacity = BUFFER_SIZE;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	line_capacity = BUFFER_SIZE;
 	line = malloc(sizeof(char) * (line_capacity + 1));
 	if (!line)
 		return (NULL);
-	line_length = 0;
 	line = read_and_store(fd, line, &line_capacity, &line_length);
 	if (!line || line_length == 0)
 	{
@@ -64,5 +65,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	line[line_length] = '\0';
-	return (ft_strdup(line));
+	result = ft_strdup(line);
+	free(line);
+	return (result);
 }
